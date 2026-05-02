@@ -1,14 +1,15 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
-const saved = JSON.parse(localStorage.getItem('ixp-auth') || '{}');
+const cached = JSON.parse(localStorage.getItem('ixp_auth') || '{}')
 
 export const useAuthStore = create((set) => ({
-  user: saved.user || null,
-  token: saved.token || null,
-  acl: saved.acl || { permissions: [] },
-  setAuth: ({ user, token, acl }) => {
-    localStorage.setItem('ixp-auth', JSON.stringify({ user, token, acl, expiresAt: Date.now() + 30*24*60*60*1000 }));
-    set({ user, token, acl });
+  token: cached.token || null,
+  user: cached.user || null,
+  acl: cached.acl || { permissions: [] },
+  setAuth: (payload) => {
+    const data = { token: payload.token, user: payload.user, acl: payload.acl || { permissions: [] } }
+    localStorage.setItem('ixp_auth', JSON.stringify(data))
+    set(data)
   },
-  clearAuth: () => { localStorage.removeItem('ixp-auth'); set({ user: null, token: null, acl: { permissions: [] } }); }
-}));
+  logout: () => { localStorage.removeItem('ixp_auth'); set({ token: null, user: null, acl: { permissions: [] } }) }
+}))

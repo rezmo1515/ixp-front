@@ -1,4 +1,3 @@
-import { axiosInstance } from './axiosInstance';
-export const getUsers = () => axiosInstance.get('/users').then(r=>r.data);
-export const updateUser = (id,d) => axiosInstance.put(`/users/${id}`, d).then(r=>r.data);
-export const assignRole = (userId, role_id) => axiosInstance.post(`/acl/users/${userId}/role`, { role_id }).then(r=>r.data);
+import api from './axiosInstance'
+export const getUsers = () => api.get('/users').then(r => r.data)
+export const updateUser = (id, payload) => api.put(`/users/${id}`, payload).then(r => r.data)

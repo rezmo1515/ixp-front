@@ -1,13 +1,14 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import PublicLayout from '../layouts/PublicLayout';
-import DashboardLayout from '../layouts/DashboardLayout';
-import { useAuthStore } from '../store/authStore';
-import { Landing, CheckPage, PingPage, DnsPage, WhoisPage, MyIpPage, LoginPage, RegisterPage, DashboardHome, MessagesPage, MessageDetailPage, ProxyPage, UsersPage, AclPage, ProfilePage } from '../pages';
+import { Navigate, Route, Routes } from 'react-router-dom'
+import PublicLayout from '../layouts/PublicLayout'
+import DashboardLayout from '../layouts/DashboardLayout'
+import { useAuthStore } from '../store/authStore'
+import * as P from '../pages'
+import usePermission from '../hooks/usePermission'
 
-const ProtectedRoute=({children})=>useAuthStore(s=>s.token)?children:<Navigate to='/login'/>;
-const PermissionRoute=({permission,children})=>{const acl=useAuthStore(s=>s.acl);return acl?.permissions?.includes(permission)?children:<div>403</div>}
+const ProtectedRoute = ({ children }) => useAuthStore.getState().token ? children : <Navigate to='/login' replace />
+const PermissionRoute = ({ permission, children }) => usePermission(permission) ? children : <div className='bg-secondary border border-border rounded-xl p-8'>403 Access Denied</div>
 
-export default function AppRouter(){return <Routes>
-<Route element={<PublicLayout/>}><Route path='/' element={<Landing/>}/><Route path='/check' element={<CheckPage publicMode/>}/><Route path='/ping' element={<PingPage publicMode/>}/><Route path='/dns' element={<DnsPage publicMode/>}/><Route path='/whois' element={<WhoisPage publicMode/>}/><Route path='/my-ip' element={<MyIpPage/>}/><Route path='/login' element={<LoginPage/>}/><Route path='/register' element={<RegisterPage/>}/></Route>
-<Route path='/dashboard' element={<ProtectedRoute><DashboardLayout/></ProtectedRoute>}><Route index element={<DashboardHome/>}/><Route path='check' element={<CheckPage/>}/><Route path='ping' element={<PingPage/>}/><Route path='dns' element={<DnsPage/>}/><Route path='whois' element={<WhoisPage/>}/><Route path='messages' element={<PermissionRoute permission='messages.view'><MessagesPage/></PermissionRoute>}/><Route path='messages/:id' element={<PermissionRoute permission='messages.view'><MessageDetailPage/></PermissionRoute>}/><Route path='proxy' element={<PermissionRoute permission='proxy.view'><ProxyPage/></PermissionRoute>}/><Route path='users' element={<PermissionRoute permission='users.view'><UsersPage/></PermissionRoute>}/><Route path='acl' element={<PermissionRoute permission='acl.manage'><AclPage/></PermissionRoute>}/><Route path='profile' element={<ProfilePage/>}/></Route>
+export default function RouterProvider(){return <Routes>
+<Route element={<PublicLayout/>}><Route path='/' element={<P.LandingPage/>}/><Route path='/check' element={<P.CheckPage publicMode/>}/><Route path='/ping' element={<P.PingPage publicMode/>}/><Route path='/dns' element={<P.DnsPage publicMode/>}/><Route path='/whois' element={<P.WhoisPage publicMode/>}/><Route path='/my-ip' element={<P.MyIpPage publicMode/>}/><Route path='/login' element={<P.LoginPage/>}/><Route path='/register' element={<P.RegisterPage/>}/></Route>
+<Route path='/dashboard' element={<ProtectedRoute><DashboardLayout/></ProtectedRoute>}><Route index element={<P.DashboardPage/>}/><Route path='check' element={<P.CheckPage/>}/><Route path='ping' element={<P.PingPage/>}/><Route path='dns' element={<P.DnsPage/>}/><Route path='whois' element={<P.WhoisPage/>}/><Route path='messages' element={<PermissionRoute permission='messages.view'><P.MessagesPage/></PermissionRoute>}/><Route path='messages/:id' element={<PermissionRoute permission='messages.view'><P.MessageDetailPage/></PermissionRoute>}/><Route path='proxy' element={<PermissionRoute permission='proxy.view'><P.ProxyPage/></PermissionRoute>}/><Route path='users' element={<PermissionRoute permission='users.view'><P.UsersPage/></PermissionRoute>}/><Route path='acl' element={<PermissionRoute permission='acl.manage'><P.AclPage/></PermissionRoute>}/><Route path='profile' element={<P.ProfilePage/>}/></Route>
 </Routes>}
