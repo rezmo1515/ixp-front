@@ -1,0 +1,2 @@
+import { Link, Outlet } from 'react-router-dom';
+export default function PublicLayout(){return <div className='min-h-screen bg-bgPrimary text-textPrimary'><header className='h-16 fixed top-0 inset-x-0 border-b border-border bg-bgSecondary z-10 flex items-center px-6'><Link to='/' className='text-accentRed font-bold'>IXP</Link></header><main className='pt-20 max-w-7xl mx-auto p-4'><Outlet/></main></div>}
