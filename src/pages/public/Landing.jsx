@@ -1,0 +1,2 @@
+import { Link } from 'react-router-dom';
+export default ()=> <div className='space-y-4'><h1 className='text-4xl font-bold'>IXP Monitoring Platform</h1><p className='text-textMuted'>Public tools are available without login.</p><div className='flex gap-2'>{['check','ping','dns','whois','my-ip'].map(p=><Link key={p} to={`/${p}`} className='px-3 py-2 bg-bgSecondary rounded border border-border'>{p}</Link>)}</div></div>
