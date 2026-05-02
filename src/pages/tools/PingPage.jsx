@@ -1,0 +1,2 @@
+import { useMutation } from '@tanstack/react-query';import { pingTest } from '../../api/tools';import { useState } from 'react';
+export default ({publicMode})=>{const [host,setHost]=useState('');const m=useMutation({mutationFn:pingTest});return <div>{publicMode&&<div>Login to save results & access more features</div>}<input value={host} onChange={e=>setHost(e.target.value)} className='bg-bgTertiary p-2'/><button onClick={()=>m.mutate({host})}>Run</button><pre>{JSON.stringify(m.data?.data,null,2)}</pre></div>}
