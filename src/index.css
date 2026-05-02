@@ -1,3 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-@tailwind base;@tailwind components;@tailwind utilities;
-:root{font-family:Inter,sans-serif;} body{@apply bg-bgPrimary text-textPrimary;} *{@apply transition-colors duration-200;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {@apply bg-primary text-white font-sans antialiased;}
+}
+
+.glass {background: linear-gradient(135deg, rgba(229,57,53,.12), rgba(255,107,107,.03));}
