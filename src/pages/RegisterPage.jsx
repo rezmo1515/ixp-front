@@ -1,0 +1,11 @@
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate, Link } from 'react-router-dom'
+import { register as registerApi } from '../api/auth'
+import { useAuthStore } from '../store/authStore'
+import Button from '../components/ui/Button'
+const schema=z.object({first_name:z.string().min(2),last_name:z.string().min(2),mobile:z.string().regex(/^09\d{9}$/),email:z.string().email().optional().or(z.literal('')),password:z.string().min(8),confirm:z.string()}).refine(d=>d.password===d.confirm,{path:['confirm'],message:'Passwords do not match'})
+export default function(){const nav=useNavigate();const setAuth=useAuthStore(s=>s.setAuth);const {register,handleSubmit,formState:{errors}}=useForm({resolver:zodResolver(schema)});const m=useMutation({mutationFn:registerApi,onSuccess:(r)=>{setAuth(r.data);nav('/dashboard')}})
+return <div className='min-h-[75vh] grid place-items-center'><form onSubmit={handleSubmit(v=>m.mutate(v))} className='w-full max-w-xl bg-secondary border border-border rounded-2xl p-6 space-y-3'><h1 className='text-3xl font-bold'>Create account</h1><div className='grid md:grid-cols-2 gap-3'><input {...register('first_name')} placeholder='First Name' className='bg-tertiary p-3 rounded-lg'/><input {...register('last_name')} placeholder='Last Name' className='bg-tertiary p-3 rounded-lg'/></div><input {...register('mobile')} placeholder='09xxxxxxxxx' className='w-full bg-tertiary p-3 rounded-lg'/><input {...register('email')} placeholder='Email (optional)' className='w-full bg-tertiary p-3 rounded-lg'/><div className='grid md:grid-cols-2 gap-3'><input type='password' {...register('password')} placeholder='Password' className='bg-tertiary p-3 rounded-lg'/><input type='password' {...register('confirm')} placeholder='Confirm Password' className='bg-tertiary p-3 rounded-lg'/></div>{Object.values(errors)[0]&&<p className='text-red-400 text-sm'>Please fix form errors.</p>}<p className='text-sm text-muted'>A welcome SMS will be sent to your mobile.</p><Button className='w-full'>Register</Button><p className='text-sm'>Already have an account? <Link to='/login' className='text-accentLight'>Login</Link></p></form></div>}
